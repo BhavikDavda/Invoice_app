@@ -1,16 +1,5 @@
-# invoice_app
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![home](https://github.com/user-attachments/assets/5b77ace0-2548-4eb9-b6cb-2385bf3ce02c)
+![Detail](https://github.com/user-attachments/assets/571b5dc1-4a83-4776-b4c9-0922622a5991)
+![cart](https://github.com/user-attachments/assets/ba3c166a-7957-49c3-a72e-245c6a3381f9)
+![invoice](https://github.com/user-attachments/assets/034d915a-c9a7-4fb3-9de6-d25e3b4c6a7f)
+![save](https://github.com/user-attachments/assets/edfdd2c7-7704-417c-870e-d6c0e36b5a1e)
