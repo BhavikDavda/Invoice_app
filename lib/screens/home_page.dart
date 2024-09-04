@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:invoice_app/utils/allproducs.dart';
+import 'package:e_commerce_app/utils/global.dart';
 
-class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+class Homescreen extends StatefulWidget {
+  const Homescreen({super.key});
 
   @override
-  State<Homepage> createState() => _HomepageState();
+  State<Homescreen> createState() => _HomescreenState();
 }
 
-class _HomepageState extends State<Homepage> {
+class _HomescreenState extends State<Homescreen> {
+  String selected = "All";
 
   @override
   Widget build(BuildContext context) {
@@ -24,249 +25,687 @@ class _HomepageState extends State<Homepage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            flex: 5,
-            child: Container(
-              padding: const EdgeInsets.all(15),
-              alignment: Alignment.topCenter,
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    height: 60,
-                    width: 380,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.4),
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Row(
-                      children: const [
-                        Icon(
-                          Icons.search_rounded,
-                          color: Colors.black,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "Search best products",
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        Spacer(),
-                        Icon(Icons.production_quantity_limits_sharp),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+        //cart button
+        actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
-              width: double.infinity,
-              height: 210,
-              decoration: BoxDecoration(
-                image: const DecorationImage(
-                  image: NetworkImage("https://img.freepik.com/premium-psd/online-shopping-from-home-sale-online-shopping-social-media-post_824239-1481.jpg?w=740"),
-                  fit: BoxFit.fill,
-                ),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.grey, width: 3),
-                color: Colors.blueGrey.shade200,
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 10,
-                    spreadRadius: 5,
-                    offset: Offset(4, 4),
-                  ),
-                ],
+            child: IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, "Cartpage");
+              },
+              icon: const Icon(
+                Icons.shopping_cart,
+                color: Colors.black,
               ),
             ),
-          ),
-          const Text(
-            "All Products",
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Expanded(
-            flex: 28,
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              alignment: Alignment.topLeft,
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ...Product.allData.map(
-                          (e) => Padding(
-                        padding: const EdgeInsets.only(right: 10, bottom: 10),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              ...e['categoryProducts'].map(
-                                    (index) => Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).pushNamed(
-                                          'Detailpage',
-                                          arguments:
-                                          index as Map<String, dynamic>);
-                                    },
-                                    child: Container(
-                                      height: 310,
-                                      width: 210,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey.withOpacity(0.4),
-                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(20),bottomRight: Radius.circular(20),),
+          )
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Advertisements
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: double.infinity,
+                  height: 210,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(advertisements[0]["image"]),
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.grey, width: 3),
+                    color: Colors.blueGrey.shade200,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.grey,
+                        blurRadius: 10,
+                        spreadRadius: 5,
+                        offset: Offset(4, 4),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // categories
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  "Categories...",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+
+              // action chip
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Wrap(
+                    spacing: 8.0, // Adjust the spacing as needed
+                    children: [
+                      ActionChip(
+                        backgroundColor: selected == "All"
+                            ? Colors.lightBlueAccent
+                            : Colors.grey.shade200,
+                        label: Text(
+                          "All",
+                          style: TextStyle(
+                            color: selected == "All"
+                                ? Colors.black
+                                : Colors.grey.shade700,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            selected = "All";
+                          });
+                        },
+                      ),
+                      ActionChip(
+                        backgroundColor: selected == "laptops"
+                            ? Colors.lightBlueAccent
+                            : Colors.grey.shade200,
+                        label: Text(
+                          "Laptops",
+                          style: TextStyle(
+                            color: selected == "laptops"
+                                ? Colors.black
+                                : Colors.grey.shade700,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            selected = "laptops";
+                          });
+                        },
+                      ),
+                      ActionChip(
+                        backgroundColor: selected == "mobiles"
+                            ? Colors.lightBlueAccent
+                            : Colors.grey.shade200,
+                        label: Text(
+                          "Mobiles",
+                          style: TextStyle(
+                            color: selected == "mobiles"
+                                ? Colors.black
+                                : Colors.grey.shade700,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            selected = "mobiles";
+                          });
+                        },
+                      ),
+                      ActionChip(
+                        backgroundColor: selected == "smartvs"
+                            ? Colors.lightBlueAccent
+                            : Colors.grey.shade200,
+                        label: Text(
+                          "Smartvs",
+                          style: TextStyle(
+                            color: selected == "smartvs"
+                                ? Colors.black
+                                : Colors.grey.shade700,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            selected = "smartvs";
+                          });
+                        },
+                      ),
+                      ActionChip(
+                        backgroundColor: selected == "sunglasses"
+                            ? Colors.lightBlueAccent
+                            : Colors.grey.shade200,
+                        label: Text(
+                          "Sunglasses",
+                          style: TextStyle(
+                            color: selected == "sunglasses"
+                                ? Colors.black
+                                : Colors.grey.shade700,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            selected = "sunglasses";
+                          });
+                        },
+                      ),
+                      ActionChip(
+                        backgroundColor: selected == "home_decor"
+                            ? Colors.lightBlueAccent
+                            : Colors.grey.shade200,
+                        label: Text(
+                          "Home Decor",
+                          style: TextStyle(
+                            color: selected == "home_decor"
+                                ? Colors.black
+                                : Colors.grey.shade700,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            selected = "home_decor";
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Laptops Section
+              Visibility(
+                visible: selected == "laptops" || selected == "All",
+                child: SizedBox(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: poduct.laptoplist.map((e) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.of(context)
+                                .pushNamed("Detailpage", arguments: e);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 170,
+                                  height: 180,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white10,
+                                    border: Border.all(
+                                        color: Colors.grey, width: 3),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Image.network(
+                                          e['thumbnail'],
+                                          width: 150,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
-                                      child: Column(
-                                        children: [
-                                          Expanded(
-                                            flex: 2,
-                                            child: Container(
-                                              padding:
-                                              const EdgeInsets.only(top: 10),
-                                              decoration: const BoxDecoration(
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft:
-                                                    Radius.circular(20),
-                                                    topRight:
-                                                    Radius.circular(20)),
-                                              ),
-                                              alignment: Alignment.center,
-                                              child: Container(
-                                                height: 180,
-                                                width: 180,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                  BorderRadius.circular(20),
-                                                  image: DecorationImage(
-                                                    image: NetworkImage(
-                                                        index['thumbnail']),
-                                                    fit: BoxFit.contain,
-                                                  ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SizedBox(
+                                    width: 150,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                e['title'],
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
                                                 ),
+                                                maxLines: 1,
+                                                softWrap: false,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
+                                            const Icon(
+                                              Icons.star,
+                                              color: Colors.amber,
+                                            ),
+                                            Text(
+                                              '${e['rating']}',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          'Rs. ${e['price']}',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
                                           ),
-                                          Expanded(
-                                            flex: 2,
-                                            child: Container(
-                                              alignment: Alignment.topCenter,
-                                              decoration: const BoxDecoration(
-                                                borderRadius: BorderRadius.only(
-                                                    bottomLeft:
-                                                    Radius.circular(20),
-                                                    bottomRight:
-                                                    Radius.circular(20)),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
+
+              // Mobiles Section
+              Visibility(
+                visible: selected == 'mobiles' || selected == 'All',
+                child: SizedBox(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: poduct.Smartphones.map((e) {
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushNamed("Detailpage", arguments: e);
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 170,
+                                  height: 180,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white10,
+                                    border: Border.all(
+                                        color: Colors.grey, width: 3),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Image.network(
+                                          e['thumbnail'],
+                                          width: 130,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SizedBox(
+                                    width: 150,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                e['title'],
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                                maxLines: 1,
+                                                softWrap: false,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    "${index['title']}",
-                                                    style: const TextStyle(
-                                                      fontSize: 21,
-                                                      fontWeight:
-                                                      FontWeight.bold,
-                                                    ),
-                                                    maxLines: 1,
-                                                    softWrap: false,
-                                                    overflow:
-                                                    TextOverflow.ellipsis,
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                    const EdgeInsets.only(
-                                                        left: 22,
-                                                        right: 18),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                      children: [
-                                                        const Icon(
-                                                          Icons
-                                                              .star_border_outlined,
-                                                          color: Colors.amber,
-                                                          size: 25,
-                                                        ),
-                                                        Text(
-                                                          "${index['rating']}",
-                                                          style: TextStyle(
-                                                            fontSize: 23,
-                                                            fontWeight:
-                                                            FontWeight.bold,
-                                                            color: Colors
-                                                                .grey.shade700,
-                                                          ),
-                                                          textAlign:
-                                                          TextAlign.center,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 41,
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                    const EdgeInsets.only(
-                                                        left: 20),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                          "₹. ${index['price']}",
-                                                          style: const TextStyle(
-                                                            color: Colors.black,
-                                                            fontWeight:
-                                                            FontWeight.bold,
-                                                            fontSize: 23,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
+                                            ),
+                                            const Icon(
+                                              Icons.star,
+                                              color: Colors.amber,
+                                            ),
+                                            Text(
+                                              '${e['rating']}',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
                                               ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          'Rs. ${e['price']}',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
+
+              // Smart TVs Section
+              Visibility(
+                visible: selected == 'smartvs' || selected == 'All',
+                child: SizedBox(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: poduct.Smartvs.map((e) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context)
+                                    .pushNamed("Detailpage", arguments: e);
+                              },
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: 170,
+                                    height: 180,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white10,
+                                      border: Border.all(
+                                          color: Colors.grey, width: 3),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image.network(
+                                            e['thumbnail'],
+                                            fit: BoxFit.cover,
+                                            width: 130,
+                                            height: 120,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: SizedBox(
+                                      width: 150,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  e['title'],
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                  ),
+                                                  maxLines: 1,
+                                                  softWrap: false,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                              const Icon(
+                                                Icons.star,
+                                                color: Colors.amber,
+                                              ),
+                                              Text(
+                                                '${e['rating']}',
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            'Rs. ${e['price']}',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
                                             ),
                                           ),
                                         ],
                                       ),
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
+                            ),
+                          );
+                        }).toList(),
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+
+              // Sunglasses Section
+              Visibility(
+                visible: selected == 'sunglasses' || selected == 'All',
+                child: SizedBox(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: poduct.Sunglasses.map((e) {
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushNamed("Detailpage", arguments: e);
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 170,
+                                  height: 180,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white10,
+                                    border: Border.all(
+                                        color: Colors.grey, width: 3),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Image.network(
+                                          e['thumbnail'],
+                                          width: 150,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SizedBox(
+                                    width: 150,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                e['title'],
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                                maxLines: 1,
+                                                softWrap: false,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            const Icon(
+                                              Icons.star,
+                                              color: Colors.amber,
+                                            ),
+                                            Text(
+                                              '${e['rating']}',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          'Rs. ${e['price']}',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
+
+              // Home Decor Section
+              Visibility(
+                visible: selected == 'home_decor' || selected == 'All',
+                child: SizedBox(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: poduct.Home_Decorating.map((e) {
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushNamed("Detailpage", arguments: e);
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 170,
+                                  height: 180,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white10,
+                                    border: Border.all(
+                                        color: Colors.grey, width: 3),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image.network(
+                                            e['thumbnail'],
+                                            width: 150,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SizedBox(
+                                    width: 150,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                e['title'],
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                                maxLines: 1,
+                                                softWrap: false,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            const Icon(
+                                              Icons.star,
+                                              color: Colors.amber,
+                                            ),
+                                            Text(
+                                              '${e['rating']}',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          'Rs. ${e['price']}',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
