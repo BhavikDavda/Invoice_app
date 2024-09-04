@@ -1,5 +1,5 @@
+import 'package:e_commerce_app/utils/global.dart';
 import 'package:flutter/material.dart';
-import 'package:invoice_app/utils/allproducs.dart';
 
 class Detailpage extends StatefulWidget {
   const Detailpage({super.key});
@@ -11,178 +11,155 @@ class Detailpage extends StatefulWidget {
 class _DetailpageState extends State<Detailpage> {
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> Data =
-    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-
+    Map<String, dynamic> args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Colors.blue,
-        title: const Text(
-          "Details",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 30,
-            color: Colors.white,
+        backgroundColor: Colors.grey.shade200,
+        appBar: AppBar(
+          backgroundColor: Colors.lightBlue,
+          title: const Text(
+            'Details',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            ),
           ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "Cartpage");
+                },
+                icon: const Icon(
+                  Icons.shopping_cart,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ],
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).pushNamed("CartPage", arguments: Data);
-              },
-              child: const Icon(
-                Icons.shopping_cart,
-                size: 28,
-              ),
-            ),
-          )
-        ],
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              alignment: Alignment.center,
-              height: 300,
-              decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.3),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                ),
-              ),
-              child: Container(
-                height: 280,
-                width: 280,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  image: DecorationImage(
-                    image: NetworkImage(Data['thumbnail']),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-            ),
+        //cart button
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            poduct.cartlist.add(args);
+            Navigator.pop(context);
+          },
+          label: const Text(
+            'Add to cart',
+            style: TextStyle(color: Colors.black),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              padding: const EdgeInsets.all(15),
-              height: 510,
-              decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.3),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text(
-                    "${Data['title']}",
-                    style: const TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
+          icon: const Icon(Icons.add_shopping_cart, color: Colors.black),
+          backgroundColor: Colors.lightBlueAccent,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              Container(
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.grey.shade200,
+                    border: Border.all(
+                      color: Colors.grey.shade300,
+                      width: 2,
                     ),
-                  ),
-                  const Divider(
-                    color: Colors.black,
-                    thickness: 2,
-                  ),
-                  Text(
-                    "Rs.${Data['price']}",
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Divider(
-                    color: Colors.black,
-                    thickness: 2,
-                  ),
-                  Text(
-                    "About:- ${Data['description']}",
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Divider(
-                    color: Colors.black,
-                    thickness: 2,
-                  ),
-                  Text(
-                    "🛒Stock:- ${Data['stock']}...",
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Divider(
-                    color: Colors.black,
-                    thickness: 2,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        "⭐ ${Data['rating']}",
-                        style: const TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade200,
+                        blurRadius: 10,
+                        spreadRadius: 5,
+                        offset: const Offset(5, 5),
+                      )
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 10, top: 10),
-                    child: Container(
-                      alignment: Alignment.center,
-                      height: 65,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.blueAccent,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-
-                         setState(() {
-                           Product.addToCart(Data);
-                         });
-                         Navigator.of(context).pop("HomePage");
-
-
-
-                        },
-                        child: const Text(
-                          "Add To Cart",
-                          style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                  child: Image.network(
+                    "${args['thumbnail']}",
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  )),
+              Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey.shade300,
+                      width: 2,
                     ),
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.black12,
                   ),
-                ],
+                  margin: const EdgeInsets.only(top: 10),
+                  child: Text(
+                    "🛒:..${args['stock']}left in stock",
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  )),
+              Container(
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey.shade300,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.black12,
+                  ),
+                  child: Text(
+                    "${args['title']}",
+                    style: const TextStyle(
+                        fontSize: 25, fontWeight: FontWeight.bold),
+                  )),
+              Container(
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey.shade300,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.black12,
+                  ),
+                  child: Text(
+                    "Rs.${args['price']}",
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
+                  )),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey.shade300,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.black12,
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.star, color: Colors.amber),
+                    Text(
+                      "${args['rating']}",
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          )
-        ],
-      ),
-    );
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Text(
+                  "About:${args['description']}",
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 }
