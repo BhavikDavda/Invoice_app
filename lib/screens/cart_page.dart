@@ -1,309 +1,169 @@
+import 'package:e_commerce_app/utils/global.dart';
 import 'package:flutter/material.dart';
-import 'package:invoice_app/utils/allproducs.dart';
 
-class CartPage extends StatefulWidget {
-  const CartPage({super.key});
+class Cartpage extends StatefulWidget {
+  const Cartpage({super.key});
 
   @override
-  State<CartPage> createState() => _CartPageState();
+  State<Cartpage> createState() => _CartpageState();
 }
 
-class _CartPageState extends State<CartPage> {
-  int value = 1;
-
+class _CartpageState extends State<Cartpage> {
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> Data2 =
-    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.lightBlue,
+        centerTitle: true,
         title: const Text(
-          "Cart",
+          'Cart',
           style: TextStyle(
+            fontSize: 24,
             fontWeight: FontWeight.bold,
-            fontSize: 30,
-            color: Colors.white,
-          ),
-        ),
-        leading: GestureDetector(
-          onTap: () {
-            setState(() {
-              Navigator.of(context).pop("Detailpage");
-            });
-          },
-          child: const Icon(
-            Icons.arrow_back_ios_new,
-            color: Colors.white,
+            color: Colors.black,
           ),
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () {
-                Navigator.of(context).pop("Homepage");
-              },
-            ),
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, "PdfPage");
+            },
+            icon: const Icon(Icons.picture_as_pdf),
           ),
         ],
-        centerTitle: true,
-        backgroundColor: Colors.blue,
       ),
-      body: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(20),
-            alignment: Alignment.topCenter,
-            color: Colors.blue,
-            width: double.infinity,
-            height: double.infinity,
-          ),
-          Container(
-            height: 700,
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(40),
-                topRight: Radius.circular(40),
-              ),
-            ),
-          ),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.only(top: 20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(30),
-              boxShadow: const [
-                BoxShadow(
-                  blurRadius: 15,
-                  spreadRadius: 3,
-                  color: Colors.grey,
-                  offset: Offset(-5, 0),
+      body: (poduct.cartlist.isEmpty)
+          ? const Center(
+        child: Text(
+          "Cart is Empty..",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+      )
+          : SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: poduct.cartlist.map((e) {
+              return Container(
+                margin: const EdgeInsets.only(bottom: 10),
+                width: double.infinity,
+                height: 180,
+                decoration: BoxDecoration(
+                  color: Colors.white70,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.grey, width: 3),
                 ),
-              ],
-            ),
-            height: 750,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(13),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ...Product.allcartData.map(
-                            (e) => (Data2['itemCount'] != 0)
-                            ? Padding(
-                          padding: const EdgeInsets.only(
-                            top: 18.0,
-                            left: 18,
-                            right: 18,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 1, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.network(
+                            e["thumbnail"],
+                            width: 120,
+                            height: 145,
+                            fit: BoxFit.cover,
                           ),
-                          child: Container(
-                            height: MediaQuery.of(context).size.height / 6.8,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SizedBox(
-                                    height: MediaQuery.of(context).size.height / 6,
-                                    child: Image.network(
-                                      '${Data2['thumbnail']}',
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '${Data2['title']}',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        Text(
-                                          '\$ ${Data2['price']}',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              Data2['itemCount'] = Data2['itemCount'] > 1 ? Data2['itemCount'] - 1 : 0;
-                                            });
-                                          },
-                                          child: const Icon(
-                                            Icons.remove_circle,
-                                            size: 25,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                                          child: Text(
-                                            '${Data2['itemCount']}',
-                                            textAlign: TextAlign.center,
-                                            style: const TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              Data2['itemCount'] += 1;
-                                            });
-                                          },
-                                          child: const Icon(
-                                            Icons.add_circle,
-                                            size: 25,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      '\$ ${Data2['price'] * Data2['itemCount']}',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(width: 10),
-                              ],
-                            ),
-                          ),
-                        )
-                            : Container(),
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-                Container(
-                  color: Colors.white,
-                  height: 300,
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const SizedBox(height: 55),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'SubTotal',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: Colors.grey.shade800,
-                              ),
-                            ),
-                            Text(
-                              '₹. ${Product.totalPrice() * value}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: Colors.grey.shade700,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 1.5,
-                          color: Colors.grey.withOpacity(0.5),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Delivery Charge',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: Colors.grey.shade800,
-                              ),
-                            ),
-                            Text(
-                              '₹. 10.00',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: Colors.grey.shade700,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 1.5,
-                          color: Colors.grey.withOpacity(0.5),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Total',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              ),
-                            ),
-                            Text(
-                              '₹. ${Product.totalPrice() * value.toDouble() + 10.00}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 55),
-                      ],
                     ),
-                  ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            e["title"],
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            maxLines: 1,
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            "Rs.${(e["price"] ?? 0).toDouble()}",
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            children: [
+                              const Icon(Icons.star, color: Colors.amber),
+                              Text(
+                                "${e["rating"]?.toDouble() ?? 0.0}",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          poduct.cartlist.remove(e);
+                          Product.totalprice();
+                        });
+                      },
+                      icon: const Icon(Icons.delete),
+                    ),
+                  ],
                 ),
-              ],
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: const BoxDecoration(
+            color: Colors.lightBlueAccent,
+            borderRadius: BorderRadius.all(Radius.circular(16)),
+            border: Border(
+              top: BorderSide(color: Colors.grey, width: 0.5),
             ),
           ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed("bilpage");
-        },
-        child: const Icon(Icons.picture_as_pdf_rounded),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Total:',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'Rs.${Product.totalprice()}',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
