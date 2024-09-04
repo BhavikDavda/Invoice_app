@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:invoice_app/utils/allproducs.dart';
+import 'package:e_commerce_app/utils/global.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -115,21 +115,20 @@ class _PdfPageState extends State<PdfPage> {
                                 top: 10, left: 8, right: 8, bottom: 10),
                             child: pw.Column(
                               children: [
-                                ...Product.allcartData.map(
-                                      (e) => pw.Padding(
+                                for (var e in poduct.cartlist)
+                                  pw.Padding(
                                     padding: const pw.EdgeInsets.all(8.0),
                                     child: pw.Row(
-                                      mainAxisAlignment:
-                                      pw.MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                                       children: [
                                         pw.Text(
-                                          "${e['title']}",
+                                          e['title'] ?? '', // Handle potential null values
                                           style: pw.TextStyle(
                                             fontWeight: pw.FontWeight.bold,
                                           ),
                                         ),
                                         pw.Text(
-                                          "\$${e['price']}",
+                                          "\$${e['price'] ?? '0.00'}", // Handle potential null values
                                           style: pw.TextStyle(
                                             fontWeight: pw.FontWeight.bold,
                                           ),
@@ -137,10 +136,10 @@ class _PdfPageState extends State<PdfPage> {
                                       ],
                                     ),
                                   ),
-                                ),
+
+                                // Delivery Charge Row
                                 pw.Row(
-                                  mainAxisAlignment:
-                                  pw.MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                                   children: [
                                     pw.Text(
                                       "Delivery Charge",
@@ -149,7 +148,7 @@ class _PdfPageState extends State<PdfPage> {
                                       ),
                                     ),
                                     pw.Text(
-                                      "\$${10.00}",
+                                      "\$10.00",
                                       style: pw.TextStyle(
                                         fontWeight: pw.FontWeight.bold,
                                       ),
@@ -175,7 +174,7 @@ class _PdfPageState extends State<PdfPage> {
                                 ),
                                 pw.SizedBox(width: 20.0),
                                 pw.Text(
-                                  '\$${Product.totalPrice() + 10.00}',
+                                  '\$${Product.totalprice() + 10.00}',
                                   style: pw.TextStyle(
                                     fontWeight: pw.FontWeight.bold,
                                     fontSize: 20.0,
@@ -188,13 +187,28 @@ class _PdfPageState extends State<PdfPage> {
                           pw.Divider(),
                           pw.SizedBox(height: 20),
                           pw.Text(
-                            "Thank You for coming!!!",
+                            "Thank You!",
+                            style: pw.TextStyle(
+                              fontWeight: pw.FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          pw.SizedBox(height: 10),
+                          pw.Text(
+                            "Have a great day!",
                             style: pw.TextStyle(
                               fontWeight: pw.FontWeight.bold,
                               fontSize: 16,
                             ),
                           ),
                           pw.SizedBox(height: 10),
+                          pw.Text(
+                            "Visit again...",
+                            style: pw.TextStyle(
+                              fontWeight: pw.FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
                         ],
                       ),
                     );
@@ -203,8 +217,17 @@ class _PdfPageState extends State<PdfPage> {
               );
 
               Directory? folder = await getDownloadsDirectory();
-              final file = File("${folder!.path}/Invoice.pdf");
-              await file.writeAsBytes(await pdf.save());
+              if (folder != null) {
+                final file = File("${folder.path}/Invoice.pdf");
+                await file.writeAsBytes(await pdf.save());
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("PDF saved to ${folder.path}/Invoice.pdf")),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Failed to get downloads directory.")),
+                );
+              }
             },
           ),
         ],
@@ -277,7 +300,6 @@ class _PdfPageState extends State<PdfPage> {
                       ],
                     ),
                   ),
-
                 ],
               ),
               const SizedBox(height: 10),
@@ -295,7 +317,7 @@ class _PdfPageState extends State<PdfPage> {
                     top: 10, left: 8, right: 8, bottom: 10),
                 child: Column(
                   children: [
-                    ...Product.allcartData.map(
+                    ...poduct.cartlist.map(
                           (e) => Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
@@ -329,7 +351,7 @@ class _PdfPageState extends State<PdfPage> {
                             ),
                           ),
                           Text(
-                            "\$${10.00}",
+                            "\$10.00",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -355,7 +377,7 @@ class _PdfPageState extends State<PdfPage> {
                     ),
                     const SizedBox(width: 20.0),
                     Text(
-                      '\$${Product.totalPrice() + 10.00}',
+                      '\$${Product.totalprice() + 10.00}',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20.0,
